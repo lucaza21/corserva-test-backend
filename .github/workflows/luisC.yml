@@ -20,40 +20,40 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-        USERNAME: ${{ secrets.USER }}
-        PASSWORD: ${{ secrets.PASSWORD }}
+      USERNAME: ${{ secrets.USER }}
+      PASSWORD: ${{ secrets.PASSWORD }}
 
     steps:
-        - name: verify branch
-          uses: actions/checkout@master
+      - name: verify branch
+        uses: actions/checkout@master
 
-        - name: envsubst-action
-          uses: nowactions/envsubst@v1
-          with:
-            input: ./credentials.ini.tpl
-            output: ./credentials.ini
+      - name: envsubst-action
+        uses: nowactions/envsubst@v1
+        with:
+          input: ./credentials.ini.tpl
+          output: ./credentials.ini
 
-        - name: Pruebas de SAST
-          run: echo "Ejecución de pruebas de SAST"
-        
-        - name: Crear archivo de credenciales
-          run: |
-            export USERNAME=${USERNAME}
-            export PASSWORD=${PASSWORD}
-            envsubst < credentials.ini.tpl > /tmp/credentials.ini
+      - name: Pruebas de SAST
+        run: echo "Ejecución de pruebas de SAST"
 
-        - name: Añadir cambios al repositorio
-          run: |
-              git config --global user.email "luis.carrasquilla.z@gmail.com"
-              git config --global user.name "lucaza21"
-              git add credentials.ini
-              git commit -m "Add credentials.ini"
+      - name: Crear archivo de credenciales
+        run: |
+          export USERNAME=${USERNAME}
+          export PASSWORD=${PASSWORD}
+          envsubst < credentials.ini.tpl > /tmp/credentials.ini
 
-        - name: Push cambios al repositorio
-          uses: ad-m/github-push-action@master
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-        
-        - name: Build docker image
-          run: |
+      - name: Añadir cambios al repositorio
+        run: |
+          git config --global user.email "luis.carrasquilla.z@gmail.com"
+          git config --global user.name "lucaza21"
+          git add credentials.ini
+          git commit -m "Add credentials.ini"
+
+      - name: Push cambios al repositorio
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker image
+        run: |
           docker build -t devops_ws . --tag devops_ws_$(date +%s)
