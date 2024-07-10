@@ -65,7 +65,7 @@ SaleOrderItem.init(
 	{
 		sequelize,
 		modelName: 'SaleOrderItem',
-		tableName: 'SaleOrderItem', // Asegúrate de que coincida con el nombre de tu tabla en PostgreSQL
+		tableName: 'SaleOrderItem',
 		timestamps: true,
 	},
 );

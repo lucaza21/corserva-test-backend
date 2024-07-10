@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../index'; // Asegúrate de que la ruta a tu archivo principal de aplicación es correcta
-import { sequelize } from '../../database'; // Importa tu instancia de Sequelize
+import app from '../../index';
+import { sequelize } from '../../database';
 
 beforeAll(async () => {
 	await sequelize.sync({ force: true });
@@ -41,7 +41,6 @@ describe('Sales Order Items API', () => {
 	});
 
 	it('should update a sale order item by id', async () => {
-		// Primero creamos un ítem de orden de venta para actualizarlo después
 		const newSaleOrderItem = {
 			orderId: 111,
 			productId: 211,
@@ -76,7 +75,6 @@ describe('Sales Order Items API', () => {
 	it('should delete a sale order item by id', async () => {
 		await request(app).delete('/api/sales/1').expect(204);
 
-		// Verificar que ya no existe
 		await request(app).get('/api/sales/1').expect(404);
 	});
 });

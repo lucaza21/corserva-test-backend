@@ -21,7 +21,7 @@ describe('getSaleOrderItemById', () => {
 
 		// Llamar a la función con un ID específico
 		const result = await salesOrdersServices.getSaleOrderItemById(1);
-		console.log(result); // Verifica el formato y los datos recibidos
+		console.log(result);
 		expect(result).toEqual(mockSaleOrderItem);
 	});
 
@@ -137,7 +137,7 @@ describe('getSaleOrderItemById', () => {
 
 		// Llamar a la función para obtener todos los elementos de venta
 		const result = await salesOrdersServices.getAllSaleOrderItems();
-		console.log(result); // Verifica el formato y los datos recibidos
+		console.log(result);
 		expect(result).toEqual(mockSaleOrderItems);
 	});
 });
