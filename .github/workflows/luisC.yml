@@ -18,41 +18,42 @@ jobs:
   second-job:
     name: Create file with secrets
     runs-on: ubuntu-latest
+
     env:
-      USERNAME: ${{ secrets.USER }}
-      PASSWORD: ${{ secrets.PASSWORD }}
+        USERNAME: ${{ secrets.USER }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+
     steps:
-      - name: Verify branch
-        uses: actions/checkout@v2
+        - name: verify branch
+          uses: actions/checkout@master
 
-      - name: Substitute environment variables in credentials
-        uses: nowactions/envsubst@v1
-        with:
-          input: ./credentials.ini.tpl
-          output: ./credentials.ini
+        - name: envsubst-action
+          uses: nowactions/envsubst@v1
+          with:
+            input: ./credentials.ini.tpl
+            output: ./credentials.ini
 
-      - name: Run SAST tests
-        run: echo "Running SAST tests"
+        - name: Pruebas de SAST
+          run: echo "Ejecución de pruebas de SAST"
+        
+        - name: Crear archivo de credenciales
+          run: |
+            export USERNAME=${USERNAME}
+            export PASSWORD=${PASSWORD}
+            envsubst < credentials.ini.tpl > /tmp/credentials.ini
 
-      - name: Move credentials file to repository directory
-        run: mv ./credentials.ini /home/runner/work/corserva-test-backend/corserva-test-backend/credentials.ini
+        - name: Añadir cambios al repositorio
+          run: |
+              git config --global user.email "luis.carrasquilla.z@gmail.com"
+              git config --global user.name "lucaza21"
+              git add credentials.ini
+              git commit -m "Add credentials.ini"
 
-      - name: Configure Git
-        run: |
-          git config --global user.email "luis.carrasquilla.z@gmail.com"
-          git config --global user.name "lucaza21"
-
-      - name: Add changes to repository
-        run: |
-          cd /home/runner/work/corserva-test-backend/corserva-test-backend
-          git add credentials.ini
-          git commit -m "Add credentials.ini"
-
-      - name: Push changes to repository
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build docker image
-        run: |
-          docker build -t devops_app . --tag devops_app_$(date +%s)
+        - name: Push cambios al repositorio
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+        
+        - name: Build docker image
+          run: |
+          docker build -t devops_ws . --tag devops_ws_$(date +%s)
