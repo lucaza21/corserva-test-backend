@@ -1,50 +1,57 @@
-name: worklflows-<LuisC>
+name: workflows-LuisC
 
-on: push
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   first-job:
-    name: check node & npm version
+    name: Check node & npm version
     runs-on: windows-latest
     steps:
-      - run: node --version
-      - run: npm --version
+      - name: Check Node.js version
+        run: node --version
+      - name: Check npm version
+        run: npm --version
 
   second-job:
-    name: Create file with secrets 
-    runs-on: ubuntu-latest 
-    env: 
-        USERNAME: ${{ secrets.USER }} 
-        PASSWORD: ${{ secrets.PASSWORD }}  
-        steps: 
-            - name: verify branch 
-              uses: actions/checkout@main 
-            - name: envsubst-action 
-              uses: nowactions/envsubst@v1 
-              with: 
-                input: ./credentials.ini.tpl 
-                output: ./credentials.ini 
-  
-            - name: Pruebas de SAST 
-              run: echo "Ejecución de pruebas de SAST" 
-             
-            - name: Crear archivo de credenciales 
-              run: | 
-               export USERNAME=${USERNAME} 
-               export PASSWORD=${PASSWORD} 
-               envsubst < credentials.ini.tpl > /tmp/credentials.ini 
+    name: Create file with secrets
+    runs-on: ubuntu-latest
+    env:
+      USERNAME: ${{ secrets.USER }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+    steps:
+      - name: Verify branch
+        uses: actions/checkout@v2
 
-            - name: Añadir cambios al repositorio 
-              run: | 
-                 git config --global user.email "luis.carrasquilla.z@gmail.com" 
-                 git config --global user.name "lucaza21" 
-                 git add credentials.ini 
-                 git commit -m "Add credentials.ini" 
-          
-          - name: Push cambios al repositorio 
-              uses: ad-m/github-push-action@main 
-              with: 
-                github_token: ${{ secrets.GITHUB_TOKEN }} 
-             
-            - name: Build docker image 
-              run: | 
-                docker build -t devops_app . --tag devops_app_$(date +%s) 
+      - name: Substitute environment variables in credentials
+        uses: nowactions/envsubst@v1
+        with:
+          input: ./credentials.ini.tpl
+          output: ./credentials.ini
+
+      - name: Run SAST tests
+        run: echo "Running SAST tests"
+
+      - name: Create credentials file
+        run: |
+          export USERNAME="${USERNAME}"
+          export PASSWORD="${PASSWORD}"
+          envsubst < credentials.ini.tpl > /tmp/credentials.ini
+
+      - name: Add changes to repository
+        run: |
+          git config --global user.email "luis.carrasquilla.z@gmail.com"
+          git config --global user.name "lucaza21"
+          git add /tmp/credentials.ini
+          git commit -m "Add credentials.ini"
+
+      - name: Push changes to repository
+        uses: ad-m/github-push-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker image
+        run: |
+          docker build -t devops_app . --tag devops_app_$(date +%s)
