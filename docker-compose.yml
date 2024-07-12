@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     image: postgres:15
@@ -9,9 +8,9 @@ services:
       - POSTGRES_DB=database_development
     ports:
       - '5432:5432'
-    volumes: 
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      
+    volumes:
+      - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
   api:
     container_name: api
     build:
@@ -31,7 +30,7 @@ services:
       - db
     volumes:
       - './:/src'
-      
+
 volumes:
   db:
     driver: local

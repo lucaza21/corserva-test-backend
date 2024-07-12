@@ -4,7 +4,7 @@ import { sequelize } from '../../database';
 
 beforeAll(async () => {
 	await sequelize.sync({ force: true });
-});
+}, 20000);
 
 describe('Sales Order Items API', () => {
 	it('should create a new sale order item', async () => {

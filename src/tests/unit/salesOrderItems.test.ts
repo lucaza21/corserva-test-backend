@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-//import { getSaleOrderItemById } from '../../services/salesOrdersServices';
-//import { SaleOrderItem } from '../../models/SaleOrderItem';
 import * as salesOrdersServices from '../../services/salesOrdersServices';
 
 describe('getSaleOrderItemById', () => {
@@ -14,14 +12,14 @@ describe('getSaleOrderItemById', () => {
 			totalPrice: 750,
 		};
 
-		// Mockear la función getSaleOrderItemById para devolver el objeto individual mockSaleOrderItem
+		// Mockear getSaleOrderItemById function to return mockSaleOrderItem object
 		jest
 			.spyOn(salesOrdersServices, 'getSaleOrderItemById')
 			.mockResolvedValue(mockSaleOrderItem as any);
 
-		// Llamar a la función con un ID específico
+		// Call the function with specific ID
 		const result = await salesOrdersServices.getSaleOrderItemById(1);
-		console.log(result);
+		//console.log(result);
 		expect(result).toEqual(mockSaleOrderItem);
 	});
 
@@ -127,17 +125,16 @@ describe('getSaleOrderItemById', () => {
 				createdAt: '2023-07-10T19:00:00Z',
 				updatedAt: '2023-07-10T19:00:00Z',
 			},
-			// Agrega más objetos si es necesario para simular una lista completa
 		];
 
-		// Mockear la función getAllSaleOrderItems para devolver la lista completa de objetos mockSaleOrderItems
+		// Mock the getAllSaleOrderItems function to return mockSaleOrderItems object list complete
 		jest
 			.spyOn(salesOrdersServices, 'getAllSaleOrderItems')
 			.mockResolvedValue(mockSaleOrderItems as any);
 
-		// Llamar a la función para obtener todos los elementos de venta
+		// Call the function to return all the objects
 		const result = await salesOrdersServices.getAllSaleOrderItems();
-		console.log(result);
+		//console.log(result);
 		expect(result).toEqual(mockSaleOrderItems);
 	});
 });

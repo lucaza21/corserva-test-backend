@@ -1,7 +1,7 @@
 /* import app from './index';
 import { sequelize } from './database';
 
-const PORT = process.env.PORT || 3030;
+const PORT = 3030;
 
 sequelize
 	.sync()
@@ -13,4 +13,5 @@ sequelize
 	})
 	.catch(error => {
 		console.error('Unable to synchronize database:', error);
-	}); */
+	});
+ */
